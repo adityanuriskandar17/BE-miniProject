@@ -6,9 +6,6 @@ class Users::RegistrationsController < Devise::RegistrationsController
   private
 
   def respond_with(resource, _opts = {})
-      puts 'RRRRRR'
-      puts request.method
-      puts 'RRRRRR'
       if request.method == "POST" && resource.persisted?
         render json: {
           message: 'Signed up successfully.',
@@ -20,7 +17,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
         }, status: :ok
       else
         render json: {
-          message: "User couldn't be created successfully.",
+          message: "User couldn't be cre  ated successfully.",
           errors: resource.errors.full_messages.to_sentence
         }, status: :unprocessable_entity
       end

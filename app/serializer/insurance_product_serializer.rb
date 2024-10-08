@@ -3,4 +3,6 @@
 class InsuranceProductSerializer
   include JSONAPI::Serializer
   attributes :id, :name
+
+  has_many :asuransis
 end

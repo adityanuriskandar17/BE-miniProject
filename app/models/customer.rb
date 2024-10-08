@@ -5,6 +5,10 @@ class Customer
   field :address, type: String
   field :phone, type: String
 
+  validates :phone, presence: true, uniqueness: { scope: :user_id, message: "already exists for this user" }
+  validates :name, :dob, :address, presence: true
+  validates :user, presence: true  # Ensure a customer must belong to a user
+
   belongs_to :user
   has_many :asuransis
 
@@ -16,7 +20,7 @@ class Customer
   def update_customer_cache
     Rails.logger.info "Updating Redis cache for customer: #{self.id}"
     $redis.set("customer:#{self.id}", self.to_json)
-  end
+  end 
 
   def remove_customer_cache
     Rails.logger.info "Removing Redis cache for customer: #{self.id}"

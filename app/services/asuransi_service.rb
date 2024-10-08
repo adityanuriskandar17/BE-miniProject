@@ -18,16 +18,17 @@ class AsuransiService
     if asuransi.save
       { asuransi: asuransi, status: :created, message: 'Asuransi was successfully created.' }
     else
-      { errors: asuransi.errors, status: :unprocessable_entity }
+      { errors: asuransi.errors, status: :unprocessable_entity, message: 'bjirlah' }
     end
   end
 
-  def update(id)
+  def update(id, update_params)
     asuransi = find_asuransi(id)
-    if asuransi.update(@params)
+    
+    if asuransi.update(update_params)
       { asuransi: asuransi, status: :ok, message: 'Asuransi was successfully updated.' }
     else
-      { errors: asuransi.errors, status: :unprocessable_entity }
+      { errors: asuransi.errors.full_messages, status: :unprocessable_entity }
     end
   end
 
@@ -39,9 +40,12 @@ class AsuransiService
 
   private
 
+  def permitted_params(params)
+    allowed_keys = %i[status active_date expire_date customer_id insurance_product_id]
+    params.slice(*allowed_keys) # Return only allowed parameters
+  end
+
   def find_asuransi(id)
-    asuransi = @user.asuransis.find_by(id: id)
-    raise ActiveRecord::RecordNotFound, 'asuransi not found' unless asuransi
-    asuransi
+    @user.asuransis.find_by(id: id) || raise(ActiveRecord::RecordNotFound, 'Asuransi not found')
   end
 end

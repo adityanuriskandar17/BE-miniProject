@@ -28,8 +28,12 @@ module Api
 
       # PATCH/PUT /api/v1/asuransis/:id
       def update
-        result = @asuransi_service.update(params[:id])
-        render json: { message: result[:message] }, status: result[:status]
+        result = @asuransi_service.update(params[:id], asuransi_params)  # Pass id and asuransi_params to service
+        if result[:status] == :ok
+          render json: { message: result[:message] }, status: :ok
+        else
+          render json: { errors: result[:errors] }, status: :unprocessable_entity
+        end
       end
 
       # DELETE /api/v1/asuransis/:id
